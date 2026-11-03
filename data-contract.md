@@ -9,3 +9,10 @@
 - A missing timetable is a separate state: keep the menu entry disabled with `待補課表`, and exclude it from swap candidates.
 - Public assets include only professional names, roles and schedule data. Local source paths and internal pending decisions stay out of generated assets.
 - The existing same-class, reciprocal conflict checks and 1–7 versus 8 period restriction remain mandatory.
+
+## Class-to-teacher navigation
+
+- A class lesson opens its teacher only when there is exactly one teacher and a matching teacher lesson with the same day, period, subject and class ID. Ambiguous or unmatched lessons stay in the class view and show the review message.
+- Save the origin class ID, selected weekday and mobile view mode before opening the teacher. Highlight the matching lesson, show its candidates and keep the origin return button available in the schedule header and fixed navigation.
+- Returning restores the origin class, weekday and view mode. A new manual class/teacher selection clears the origin; changing weekday, view mode or a lesson within the teacher view does not overwrite it.
+- Partial teachers may be opened from known matching class lessons, but still produce no swap candidates. Navigation never changes schedule data or swap eligibility.
