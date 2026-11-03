@@ -102,7 +102,7 @@ def setup_styles(doc: Document) -> None:
     normal.font.name = "Arial Unicode MS"
     normal.font.size = Pt(11)
     normal.paragraph_format.space_after = Pt(6)
-    normal.paragraph_format.line_spacing = 1.15
+    normal.paragraph_format.line_spacing = Pt(16)
 
     for style_name, size, color, before, after in [
         ("Heading 1", 18, "1F4E79", 14, 8),

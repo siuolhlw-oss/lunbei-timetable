@@ -16,3 +16,10 @@
 - Save the origin class ID, selected weekday and mobile view mode before opening the teacher. Highlight the matching lesson, show its candidates and keep the origin return button available in the schedule header and fixed navigation.
 - Returning restores the origin class, weekday and view mode. A new manual class/teacher selection clears the origin; changing weekday, view mode or a lesson within the teacher view does not overwrite it.
 - Partial teachers may be opened from known matching class lessons, but still produce no swap candidates. Navigation never changes schedule data or swap eligibility.
+
+## Mobile current-day defaults
+
+- Determine the calendar date and weekday in `Asia/Taipei`; Saturday and Sunday map to Monday with no additional notice.
+- On mobile (viewport width at most 650px), ordinary teacher/class selections reset the weekday to today. Preserve the selected day/week mode. Specific class lesson navigation and return restore their explicit weekday and mode instead.
+- On visibility restoration, page restoration or window focus, update only if the Taiwan calendar date changed and the page is visible on mobile. Clear the active lesson and candidate contents, keeping the current teacher/class, origin-class return context and view mode. Same-day returns preserve manual browsing.
+- Do not use a midnight timer: uninterrupted foreground browsing stays put until the next ordinary query or return to the page. Desktop behavior remains unchanged.
