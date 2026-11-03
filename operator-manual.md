@@ -21,6 +21,6 @@
 
 公開專案只放網站所需的教師姓名、職務、科別與課表資料。不要加入原始教職員名冊、私人聯絡資料、帳號密碼、個人電腦路徑或 OneDrive 檔案內容。
 
-`selection-data.js` 和 `timetable-data.js` 是產生檔，請修改 `` 下的 JSON 後重新產生。`` 的其他檔案與 `index.html` 是網站程式。資料狀態和互調規則記錄於 `data-contract.md`。
+`selection-data.js` 和 `timetable-data.js` 是產生檔，請修改根目錄的 `menu.json` 與 `timetable.json` 後重新產生。其餘 JavaScript、CSS 檔案與 `index.html` 是網站程式。資料狀態和互調規則記錄於 `data-contract.md`。
 
 若操作流程變動，同步更新使用說明及其 PDF、Word 版本。使用說明連結由 `config.js` 的相對檔案路徑設定。
