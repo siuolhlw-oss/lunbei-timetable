@@ -39,6 +39,11 @@
           "hasSchedule": true
         },
         {
+          "name": "林來進",
+          "tag": "訓育組長",
+          "hasSchedule": true
+        },
+        {
           "name": "李沿錚",
           "tag": "生教組長",
           "hasSchedule": true
@@ -215,16 +220,6 @@
         {
           "name": "廖哲毅",
           "tag": "數學",
-          "hasSchedule": true
-        }
-      ]
-    },
-    {
-      "label": "歷史",
-      "items": [
-        {
-          "name": "林來進",
-          "tag": "歷史",
           "hasSchedule": true
         }
       ]
