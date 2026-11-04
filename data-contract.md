@@ -36,7 +36,8 @@
 
 ## Original lesson marker and blank slots
 
-- In the candidate teacher's timetable, mark the original teacher's requested day/period with an amber dashed reference card containing the original teacher, subject and class. Keep the candidate's own lesson green. This reference never writes schedule data or replaces an occupied lesson.
+- Each comparison timetable marks the other teacher's requested day/period with an amber dashed reference card containing that teacher, subject and class: the left/original timetable marks the candidate's slot, while the right/candidate timetable marks the original slot. Each teacher's own lesson remains green, with a role-specific legend above each table. These references never write schedule data or replace occupied lessons.
+- `renderWeek` / `renderDay` options retain `origin` as the reference lesson pair and accept an optional `referenceRole` (default `原老師`); use `候選老師` for the left table's marker label and accessible name. Portrait source-summary and jump behavior remain unchanged.
 - Portrait previews retain the original lesson summary above both daily and weekly views. The jump button selects the original weekday within the preview, preserves day/week mode, focuses and scrolls to the visible marker. The main schedule selection, day/mode and class-return context stay unchanged. Opening or reopening a candidate resets its preview to week mode and its day-view weekday to the candidate day.
 - Teacher, class and candidate timetables retain every period and grid cell, including all eight periods. Remove the unassigned placeholder text and dash; blank cells remain visible. Known incomplete data must still display `未提供`, and candidates remain disabled for partial teachers.
 

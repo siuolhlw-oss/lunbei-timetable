@@ -26,6 +26,16 @@ for (const teacher of data.teachers) for (const source of teacher.lessons) {
     assert.ok(cells[(source.period - 1) * 5 + source.day - 1].includes('compare-origin-slot'), 'Origin marker must use original day and period');
     assert.ok(cells[(candidate.period - 1) * 5 + candidate.day - 1].includes('is-picked'), 'Keep candidate lesson highlighted separately');
     assert.ok(!markedWeek.includes('未排課'));
+    const sourceWeek = preview.renderWeek(pair.original.teacher, pair.original.lesson, data.periods, engine.classes,
+      {origin: pair.other, referenceRole: '候選老師', pickedLabel: '原老師要調的課'});
+    const sourceCells = [...sourceWeek.matchAll(/<td>(.*?)<\/td>/gs)].map(m => m[1]);
+    assert.equal(sourceCells.length, 40);
+    assert.equal(sourceCells.filter(c => c.includes('compare-origin-slot')).length, 1);
+    const reciprocalCell = sourceCells[(candidate.period - 1) * 5 + candidate.day - 1];
+    assert.ok(reciprocalCell.includes('compare-origin-slot'), 'Left timetable must mark the candidate day and period');
+    assert.ok(reciprocalCell.includes('候選老師待調時段') && reciprocalCell.includes(candidate.teacher) && reciprocalCell.includes(candidate.subject));
+    assert.ok(sourceCells[(source.period - 1) * 5 + source.day - 1].includes('is-picked'), 'Keep the original lesson green');
+    assert.ok(!sourceWeek.includes('未排課'));
     for (const weekday of new Set([source.day, candidate.day])) {
       const daily = preview.renderDay(pair.other.teacher, pair.other.lesson, weekday, data.periods, engine.classes, options);
       assert.equal((daily.match(/class="compare-day-row"/g) || []).length, 8, 'Never omit an empty period');
@@ -63,4 +73,4 @@ assert.ok(!safeMarker.includes('<img>')&&!safeMarker.includes('<script>'));
 const overlappingOrigin={teacher,lesson:{...source,day:candidate.day,period:candidate.period}};
 const overlap=preview.renderWeek(pair.other.teacher,pair.other.lesson,data.periods,engine.classes,{origin:overlappingOrigin});
 assert.ok(!overlap.includes('compare-origin-slot'),'Never replace an existing teacher lesson with a reference marker');
-console.log(JSON.stringify({result:'passed',candidatePairs:count,checks:['exact lesson identity','both selected cells','source slot coordinates','all eight periods and 40 cells','blank empty cells','no schedule overwrite','read-only cells','partial/missing/ambiguous rejection','escaping']}));
+console.log(JSON.stringify({result:'passed',candidatePairs:count,checks:['exact lesson identity','both selected cells','source and reciprocal slot coordinates','all eight periods and 40 cells','blank empty cells','no schedule overwrite','read-only cells','partial/missing/ambiguous rejection','escaping']}));
