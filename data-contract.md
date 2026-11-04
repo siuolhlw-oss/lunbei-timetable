@@ -39,3 +39,10 @@
 - In the candidate teacher's timetable, mark the original teacher's requested day/period with an amber dashed reference card containing the original teacher, subject and class. Keep the candidate's own lesson green. This reference never writes schedule data or replaces an occupied lesson.
 - Portrait previews retain the original lesson summary above both daily and weekly views. The jump button selects the original weekday within the preview, preserves day/week mode, focuses and scrolls to the visible marker. The main schedule selection, day/mode and class-return context stay unchanged. Opening or reopening a candidate resets its preview to week mode and its day-view weekday to the candidate day.
 - Teacher, class and candidate timetables retain every period and grid cell, including all eight periods. Remove the unassigned placeholder text and dash; blank cells remain visible. Known incomplete data must still display `未提供`, and candidates remain disabled for partial teachers.
+
+## Teacher subject search
+
+- Build each teacher menu button's `data-search` from the existing name and role tag plus distinct subject strings from that teacher's provided timetable lessons. Match across every menu category using the existing substring search.
+- These search subjects are metadata only: keep visible name/role text, accessible button name, category order and timetable-availability state unchanged. No hidden text nodes or additional visible subject labels are added. Metadata remains inspectable in public page source.
+- Use only supplied lessons, including known lessons for partial schedules; do not infer missing subjects, teaching qualifications or a primary specialty. Missing schedules retain existing name/tag matching and disabled buttons. Preserve original curriculum names without guessed categorization.
+- Load timetable data before menu rendering. No source JSON schema or swap eligibility changes are required.
