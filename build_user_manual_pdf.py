@@ -358,8 +358,8 @@ def build_pdf(project_root: Path, source: Path, output: Path) -> None:
     doc = SimpleDocTemplate(
         str(output),
         pagesize=A4,
-        topMargin=0.82 * inch,
-        bottomMargin=0.72 * inch,
+        topMargin=0.65 * inch,
+        bottomMargin=0.60 * inch,
         leftMargin=0.82 * inch,
         rightMargin=0.82 * inch,
         title="崙背國中課表使用說明",

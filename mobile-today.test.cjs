@@ -8,6 +8,7 @@ const timetableData = JSON.parse(fs.readFileSync(__dirname+'/timetable.json','ut
 const appSource = fs.readFileSync(__dirname+'/app.js','utf8');
 function session(iso, mobile=true, search=''){
  let now=Date.parse(iso);
+ let mountedPreviews=0;
  const nodes=new Map(), documentEvents={}, windowEvents={};
  const node=key=>{
   if(!nodes.has(key))nodes.set(key,{
@@ -26,10 +27,11 @@ function session(iso, mobile=true, search=''){
   Date:class extends Date{constructor(...args){super(...(args.length?args:[now]));}},
   matchMedia:()=>({matches:mobile}),IntersectionObserver:class{observe(){}},
   TimetableEngine:{createEngine},timetableData,siteConfig:{manualPdf:'user-manual.pdf'},
+  CandidatePreview:{renderCards:()=>'',mount:()=>{mountedPreviews++;return {destroy(){mountedPreviews--;}};}},
   escapeHTML:String,clearSelection(){}});
  vm.runInContext(appSource,context);
  const run=code=>vm.runInContext(code,context);
- return {run,node,document,setTime:iso=>{now=Date.parse(iso);},
+ return {run,node,document,previews:()=>mountedPreviews,setTime:iso=>{now=Date.parse(iso);},
   event:(name)=>{(documentEvents[name]||windowEvents[name])();},
   state:()=>JSON.parse(run('JSON.stringify({day:chosenDay,date:observedDate,mode:viewMode,active:!!activeLesson,origin:classReturn,kind:selectedTarget?.kind,id:selectedTarget?.record.id,name:selectedTarget?.record.name})'))};
 }
@@ -73,6 +75,7 @@ for(const event of ['visibilitychange','focus','pageshow'])check('Cross-day '+ev
  s.document.visibilityState='visible';s.event(event);
  assert.equal(s.state().day,2);assert.equal(s.state().mode,'week');assert.equal(s.state().name,'黃隆偉');
  assert.equal(s.state().active,false);assert.equal(s.node('.candidate-panel').hidden,true);
+ assert.equal(s.previews(),0,'Cross-day reset destroys the old candidate controller');
  assert.equal(s.node('.candidate-panel').innerHTML,'');
  assert.equal(s.node('.lesson-summary').hidden,true);
  assert.equal(s.document.activeElement,s.node('created-section'));
@@ -104,6 +107,15 @@ check('No selection and invalid targets are safe across date changes',()=>{
  const s=session('2026-11-02T01:00:00Z');s.setTime('2026-11-03T01:00:00Z');
  s.event('visibilitychange');assert.equal(s.state().day,2);
  s.run("chosenDay=5;choose('teacher','不存在',false)");assert.equal(s.state().day,5);
+});
+check('Candidate controllers are released on rebuild, close and target replacement',()=>{
+ const s=session('2026-11-04T01:00:00Z');
+ s.run("choose('teacher','黃隆偉',false);openLesson(selectedTarget.record.lessons.find(l=>l.day===3&&l.period===6))");
+ assert.equal(s.previews(),1);
+ s.run('showCandidates(activeLesson,false)');assert.equal(s.previews(),1);
+ s.run('returnToSchedule()');assert.equal(s.previews(),0);
+ s.run('showCandidates(activeLesson,false)');assert.equal(s.previews(),1);
+ s.run("choose('class','804',false)");assert.equal(s.previews(),0);
 });
 check('Desktop retains existing behavior',()=>{
  const s=session('2026-11-02T01:00:00Z',false);

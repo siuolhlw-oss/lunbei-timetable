@@ -23,3 +23,11 @@
 - On mobile (viewport width at most 650px), ordinary teacher/class selections reset the weekday to today. Preserve the selected day/week mode. Specific class lesson navigation and return restore their explicit weekday and mode instead.
 - On visibility restoration, page restoration or window focus, update only if the Taiwan calendar date changed and the page is visible on mobile. Clear the active lesson and candidate contents, keeping the current teacher/class, origin-class return context and view mode. Same-day returns preserve manual browsing.
 - Do not use a midnight timer: uninterrupted foreground browsing stays put until the next ordinary query or return to the page. Desktop behavior remains unchanged.
+
+## Candidate timetable preview
+
+- A candidate expands immediately below its own row. Clicking it again collapses it; opening another closes the previous panel while preserving the clicked row's viewport position.
+- Resolve each teacher's lesson by day, period, subject and candidate class. Require exactly one match on each side and complete teacher schedules; ambiguous or incomplete data shows a review message instead of a comparison.
+- Portrait mode initially displays the candidate's weekday, with independent day/week and weekday controls. Width at least 900px, or landscape width at least 568px, displays the original teacher's full week on the left and candidate teacher's on the right. Highlight each teacher's own exchanged lesson; all eight periods remain visible.
+- Preview cells are read-only. Keep the original target, selected lesson, main weekday/mode and class-return context unchanged. The preview does not change swap eligibility or schedule data.
+- Close and destroy the preview on candidate rebuild, teacher/class replacement, closing the candidate panel and cross-day reset. Use distinct selectors from the main schedule controls.
