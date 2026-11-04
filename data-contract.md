@@ -17,7 +17,9 @@
 - Returning restores the origin class, weekday and view mode. A new manual class/teacher selection clears the origin; changing weekday, view mode or a lesson within the teacher view does not overwrite it.
 - Partial teachers may be opened from known matching class lessons, but still produce no swap candidates. Navigation never changes schedule data or swap eligibility.
 
-## Mobile current-day defaults
+## Default view and mobile current-day selection
+
+- Start teacher/class views in week mode on a fresh page load; retain the user-selected day/week mode during the current session. Mobile day view still uses the current-day rules below.
 
 - Determine the calendar date and weekday in `Asia/Taipei`; Saturday and Sunday map to Monday with no additional notice.
 - On mobile (viewport width at most 650px), ordinary teacher/class selections reset the weekday to today. Preserve the selected day/week mode. Specific class lesson navigation and return restore their explicit weekday and mode instead.
@@ -28,12 +30,12 @@
 
 - A candidate expands immediately below its own row. Clicking it again collapses it; opening another closes the previous panel while preserving the clicked row's viewport position.
 - Resolve each teacher's lesson by day, period, subject and candidate class. Require exactly one match on each side and complete teacher schedules; ambiguous or incomplete data shows a review message instead of a comparison.
-- Portrait mode initially displays the candidate's weekday, with independent day/week and weekday controls. Width at least 900px, or landscape width at least 568px, displays the original teacher's full week on the left and candidate teacher's on the right. Highlight each teacher's own exchanged lesson; all eight periods remain visible.
+- Portrait mode initially displays the full week, with independent day/week and weekday controls. Switching to day mode initially displays the candidate's weekday. Width at least 900px, or landscape width at least 568px, displays the original teacher's full week on the left and candidate teacher's on the right. Highlight each teacher's own exchanged lesson; all eight periods remain visible.
 - Preview cells are read-only. Keep the original target, selected lesson, main weekday/mode and class-return context unchanged. The preview does not change swap eligibility or schedule data.
 - Close and destroy the preview on candidate rebuild, teacher/class replacement, closing the candidate panel and cross-day reset. Use distinct selectors from the main schedule controls.
 
 ## Original lesson marker and blank slots
 
 - In the candidate teacher's timetable, mark the original teacher's requested day/period with an amber dashed reference card containing the original teacher, subject and class. Keep the candidate's own lesson green. This reference never writes schedule data or replaces an occupied lesson.
-- Portrait previews retain the original lesson summary above both daily and weekly views. The jump button selects the original weekday within the preview, preserves day/week mode, focuses and scrolls to the visible marker. The main schedule selection, day/mode and class-return context stay unchanged. Opening a different candidate resets its preview to the candidate day.
+- Portrait previews retain the original lesson summary above both daily and weekly views. The jump button selects the original weekday within the preview, preserves day/week mode, focuses and scrolls to the visible marker. The main schedule selection, day/mode and class-return context stay unchanged. Opening or reopening a candidate resets its preview to week mode and its day-view weekday to the candidate day.
 - Teacher, class and candidate timetables retain every period and grid cell, including all eight periods. Remove the unassigned placeholder text and dash; blank cells remain visible. Known incomplete data must still display `未提供`, and candidates remain disabled for partial teachers.
