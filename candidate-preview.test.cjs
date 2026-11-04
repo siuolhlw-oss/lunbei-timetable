@@ -18,6 +18,20 @@ for (const teacher of data.teachers) for (const source of teacher.lessons) {
       assert.equal((week.match(/scope="row"/g) || []).length, 8);
       assert.ok(!week.includes('data-lesson'), 'Comparison cells must not trigger another swap');
     }
+    const options = {origin: pair.original, pickedLabel: '候選課程'};
+    const markedWeek = preview.renderWeek(pair.other.teacher, pair.other.lesson, data.periods, engine.classes, options);
+    const cells = [...markedWeek.matchAll(/<td>(.*?)<\/td>/gs)].map(m => m[1]);
+    assert.equal(cells.length, 40, 'All weekday/period cells must remain present');
+    assert.equal(cells.filter(c => c.includes('compare-origin-slot')).length, 1);
+    assert.ok(cells[(source.period - 1) * 5 + source.day - 1].includes('compare-origin-slot'), 'Origin marker must use original day and period');
+    assert.ok(cells[(candidate.period - 1) * 5 + candidate.day - 1].includes('is-picked'), 'Keep candidate lesson highlighted separately');
+    assert.ok(!markedWeek.includes('未排課'));
+    for (const weekday of new Set([source.day, candidate.day])) {
+      const daily = preview.renderDay(pair.other.teacher, pair.other.lesson, weekday, data.periods, engine.classes, options);
+      assert.equal((daily.match(/class="compare-day-row"/g) || []).length, 8, 'Never omit an empty period');
+      assert.equal((daily.match(/compare-origin-slot/g) || []).length, Number(weekday === source.day));
+      assert.ok(!daily.includes('未排課'));
+    }
     sample ||= {teacher, source, candidate};
     count++;
   }
@@ -42,4 +56,11 @@ assert.equal((day.match(/class="compare-picked-label"/g) || []).length, 1);
 const safe = preview.renderCards([{...candidate, teacher:'<img src=x>', subject:'"<script>', classId:'A&B'}]);
 assert.ok(!safe.includes('<img') && !safe.includes('<script>'));
 assert.ok(safe.includes('&lt;img') && safe.includes('A&amp;B'));
-console.log(JSON.stringify({result:'passed',candidatePairs:count,checks:['exact lesson identity','both selected cells','all eight periods','read-only cells','partial/missing/ambiguous rejection','escaping']}));
+const unsafeOrigin={teacher:{name:'<img>'},lesson:{...source,subject:'<script>',classIds:['A&B']}};
+const safeMarker=preview.renderWeek(pair.other.teacher,pair.other.lesson,data.periods,engine.classes,{origin:unsafeOrigin});
+assert.ok(safeMarker.includes('&lt;img&gt;')&&safeMarker.includes('&lt;script&gt;')&&safeMarker.includes('A&amp;B'));
+assert.ok(!safeMarker.includes('<img>')&&!safeMarker.includes('<script>'));
+const overlappingOrigin={teacher,lesson:{...source,day:candidate.day,period:candidate.period}};
+const overlap=preview.renderWeek(pair.other.teacher,pair.other.lesson,data.periods,engine.classes,{origin:overlappingOrigin});
+assert.ok(!overlap.includes('compare-origin-slot'),'Never replace an existing teacher lesson with a reference marker');
+console.log(JSON.stringify({result:'passed',candidatePairs:count,checks:['exact lesson identity','both selected cells','source slot coordinates','all eight periods and 40 cells','blank empty cells','no schedule overwrite','read-only cells','partial/missing/ambiguous rejection','escaping']}));

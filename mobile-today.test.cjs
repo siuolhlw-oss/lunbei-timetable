@@ -108,6 +108,21 @@ check('No selection and invalid targets are safe across date changes',()=>{
  s.event('visibilitychange');assert.equal(s.state().day,2);
  s.run("chosenDay=5;choose('teacher','不存在',false)");assert.equal(s.state().day,5);
 });
+check('Blank timetable slots retain all periods; unknown schedules remain explicit',()=>{
+ const s=session('2026-11-04T01:00:00Z');
+ for(const query of ["choose('teacher','黃隆偉',false)","choose('class','804',false)"]){
+  s.run(query);
+  const daily=s.node('.schedule-day').innerHTML, weekly=s.node('.schedule-grid').innerHTML;
+  assert.equal((daily.match(/class="day-slot"/g)||[]).length,8);
+  assert.equal((weekly.match(/class="period-time"/g)||[]).length,8);
+  assert.ok(!daily.includes('未排課')&&!weekly.includes('—'));
+ }
+ const partial=timetableData.teachers.find(t=>t.scheduleStatus==='partial');
+ assert.ok(partial);
+ s.run(`choose('teacher',${JSON.stringify(partial.name)},false)`);
+ assert.ok(s.node('.schedule-day').innerHTML.includes('未提供'));
+ assert.ok(s.node('.schedule-grid').innerHTML.includes('未提供'));
+});
 check('Candidate controllers are released on rebuild, close and target replacement',()=>{
  const s=session('2026-11-04T01:00:00Z');
  s.run("choose('teacher','黃隆偉',false);openLesson(selectedTarget.record.lessons.find(l=>l.day===3&&l.period===6))");

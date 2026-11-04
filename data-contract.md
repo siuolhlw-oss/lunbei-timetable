@@ -31,3 +31,9 @@
 - Portrait mode initially displays the candidate's weekday, with independent day/week and weekday controls. Width at least 900px, or landscape width at least 568px, displays the original teacher's full week on the left and candidate teacher's on the right. Highlight each teacher's own exchanged lesson; all eight periods remain visible.
 - Preview cells are read-only. Keep the original target, selected lesson, main weekday/mode and class-return context unchanged. The preview does not change swap eligibility or schedule data.
 - Close and destroy the preview on candidate rebuild, teacher/class replacement, closing the candidate panel and cross-day reset. Use distinct selectors from the main schedule controls.
+
+## Original lesson marker and blank slots
+
+- In the candidate teacher's timetable, mark the original teacher's requested day/period with an amber dashed reference card containing the original teacher, subject and class. Keep the candidate's own lesson green. This reference never writes schedule data or replaces an occupied lesson.
+- Portrait previews retain the original lesson summary above both daily and weekly views. The jump button selects the original weekday within the preview, preserves day/week mode, focuses and scrolls to the visible marker. The main schedule selection, day/mode and class-return context stay unchanged. Opening a different candidate resets its preview to the candidate day.
+- Teacher, class and candidate timetables retain every period and grid cell, including all eight periods. Remove the unassigned placeholder text and dash; blank cells remain visible. Known incomplete data must still display `未提供`, and candidates remain disabled for partial teachers.
